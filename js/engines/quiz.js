@@ -62,13 +62,15 @@
       const options = h('div', { class: 'options cols-' + cols + (round.optClass ? ' ' + round.optClass : '') },
         round.options.map((opt) => optionButton(opt, onPick)));
 
-      body.replaceChildren(
+      // replaceChildren() would print a literal "null", so drop empty parts first.
+      const parts = [
         h('div', { class: 'question' },
           h('button', { class: 'speak-btn', type: 'button', 'aria-label': ctx.t('listen'), onclick: sayQuestion }, '🔊'),
           h('span', {}, round.q)),
         round.visual ? h('div', { class: 'visual ' + (round.visualClass || ''), html: round.visual }) : null,
-        options
-      );
+        options,
+      ].filter(Boolean);
+      body.replaceChildren(...parts);
       ctx.later(sayQuestion, 350);
       return null;
     }
